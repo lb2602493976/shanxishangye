@@ -1,0 +1,16 @@
+export default{
+	// BASE_API:'http://192.168.0.101:8081/jeecg-boot',
+	BASE_API:'https://zhaosheng.kanxiaowang.com/jeecg-boot',
+	// APP_ID:'wxd1cfa0da4f6794bc', 
+	APP_ID:'wx6deabb941086a2f6',
+	provider:'',
+	openId:'',
+	school:'',
+	token:'',
+	user:null,
+	schoolLabelColor:['#4E8DF4','#FF689A','#7AB821','#E49A1A'],
+	wxUserInfo:null,
+	URLL:'',
+	$theme:'#10B2F8',
+	$theme2:'#5DD3FF',
+}
