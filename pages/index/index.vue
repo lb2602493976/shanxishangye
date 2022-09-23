@@ -66,7 +66,7 @@
 			<swiper class="swiper" :indicator-dots="true" indicator-active-color="#ffffff" :autoplay="true" :interval="2000" :duration="500" :circular="true">
 				<swiper-item v-for="(item,index) in banners" :key="item.id">
 					<view class="swiper-item">
-						<image :src="item.picUrl" mode="aspectFill" @click="nav(item.picHref)"></image>
+						<image :src="item.picUrl" mode="aspectFill" @click="navNewDeatil(item)"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -331,20 +331,30 @@
 		<view style="position: relative;z-index: 11;">
 			<span @click="moreClick" style="position: absolute;right: 50rpx;top: 15rpx;border-radius: 20rpx;border: 2rpx solid #000;font-size: 26rpx;z-index: 10;padding: 2rpx 20rpx;">更多</span>
 		</view>
+		<template v-if="bottomImgList.length>=3">
+			<view class="notice_bg" >
+				<!-- <view class="line"></view> -->
+				<swiper autoplay="true" display-multiple-items="3" vertical="true" circular interval="2000" class="bar-swiper">
+					<swiper-item v-for="(item, index) in bottomImgList" :key="index" class="swiper-item"  @tap="toProgram(item)">
+						<!-- <view class="circle"></view> -->
+						<image class="icon" :src="item.pic"></image>
+						<!-- <view class="item_box">
+							{{ item.schName }}
+						</view> -->
+					</swiper-item>
+				</swiper>
+			</view>
+		</template>
 		
-		<view class="notice_bg">
-			<!-- <view class="line"></view> -->
-			<swiper autoplay="true" display-multiple-items="3" vertical="true" circular interval="2000" class="bar-swiper">
-				<swiper-item v-for="(item, index) in bottomImgList" :key="index" class="swiper-item"  @tap="toProgram(item)">
-					<!-- <view class="circle"></view> -->
-					<image class="icon" :src="item.pic"></image>
-					<!-- <view class="item_box">
-						{{ item.schName }}
-					</view> -->
-				</swiper-item>
-			</swiper>
-		</view>
-		
+		<template  v-else>
+			<view :style="{ 'Height':bottomHeight(bottomImgList.length)}" class="notice_bg1"  >
+				<view class="notice_bg1_piclist" v-for="item in bottomImgList" >
+					<image class="icon" :src="item.pic"  @tap="toProgram(item)"></image>
+					<!-- <view>{{bottomImgList.length}}</view> -->
+				</view>
+			</view>
+		</template>
+
 		<view class="bottom">
 			<image class="bottom_bg" src="../../static/p005.jpg"></image>
 			<!-- <view class="bottom-img">
@@ -376,6 +386,7 @@
 				title:'',
 				list:[],
 				bottomImgList:[],
+				
 				// noticeImg:'',//左侧图片
 				
 				tabs:[
@@ -472,6 +483,7 @@
 				this.handleSearchMajor()
 				this.getShipSchool()
 			})
+			
 		},
 		computed:{
 			newsConfigP1(){
@@ -486,9 +498,67 @@
 			newsConfigP4(){
 				return this.newsConfig.slice(4)
 			},
+			bottomHeight(){
+				// this.getShipSchool()
+				
+				return function(i){
+					console.log(i,'this.bottomImgList.lenght')
+					return i==1?'170px':'300px'
+				} 
+			}
+			
 		},
 		methods:{
-			
+			navNewDeatil(item){
+				// 跳转
+				// {
+				  //   itemValue:'1',
+				  //   itemText:'跳转公众链接'
+				  // picHref
+				  // },
+				  // {
+				  //   itemValue:'2',
+				  //   itemText:'跳转小程序'
+				  // appid
+				  // },
+				  // {
+				  //   itemValue:'3',
+				  //   itemText:'跳转新闻'
+				  // }
+				  // newType newId
+				console.log(item,'item')
+				console.log(item.newId,'item.newId')
+				if(item.targetType=="1"){
+					
+				}else if(item.targetType=="2"){
+					// 跳转小程序
+					if(item.appid){
+						uni.navigateToMiniProgram({
+						  appId:item.appid,
+						  success:(res)=> {
+						    // 打开成功
+						  },
+						  fail:(err)=>{
+							  if(err.errMsg!=="navigateToMiniProgram:fail cancel"){
+								  uni.showToast({ title:'配置小程序appId错误',icon:'none' })
+								  console.log(err,'获取appid失败') 
+							  }else{
+								  console.log(err,'取消') 
+							  }
+						  }
+						})
+					}else{
+						return uni.showToast({ title:'没有小程序或不属于此平台',icon:'none' })
+					}
+				}else if(item.targetType=="3"){
+					uni.navigateTo({
+						url:`/pages_common/news/detail?id=${item.newId}`
+					})
+				}else{
+					console.log('啥子都没有')
+				}
+				
+			},
 			handleLogin(){
 				return login().then(({ code,provider }) => {
 					getOpenId(code).then(res => {
@@ -659,9 +729,7 @@
 			},
 			getShipSchool(){
 				api.friendShipSchool({tenantId:this.tenantId}).then(res=>{
-					console.log(res.result,'res.resultres.resultres.result')
 					this.bottomImgList=res.result
-					console.log(this.bottomImgList,'res.resultres.resultres.this.bottomImgList')
 				})
 			},
 			toProgram(item){
@@ -856,6 +924,26 @@
 			// -webkit-line-clamp: 1; /** 显示的行数 **/
 		}
 	}
+	.notice_bg1{
+		margin: 20rpx 40rpx 60rpx 40rpx;
+		// background-color: #FFFFFF;
+		background: rgba(217, 236, 255, 1);
+		border-radius: 20rpx;
+		padding:40rpx 40rpx 20rpx 40rpx;
+		// height: 550rpx;
+		// display: flex;
+		// align-items: center;
+		position: relative;
+		z-index: 10;
+		.notice_bg1_piclist{
+			margin-top: 50rpx;
+		}
+		.icon{
+			width: 600rpx;
+			height: 200rpx;
+			@include radius(20rpx);
+		}
+	}
 	.bottom{
 		width:100%;
 		height:280rpx;
@@ -867,7 +955,7 @@
 			height: 790rpx;
 			// height: 1100rpx;
 			position: absolute;
-			top: -250px;
+			top: -210px;
 			left: 0;
 		}
 		.bottom-img{

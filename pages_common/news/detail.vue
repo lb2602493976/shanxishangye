@@ -53,6 +53,7 @@
 		},
 		onLoad({ id }){
 			this.id = id
+			console.log(this.id,'idddd')
 			this.handleSearch()
 		},
 		methods:{
@@ -71,6 +72,7 @@
 				uni.showLoading()
 				return api.getNewsDetail({ id }).then(res=>{
 					this.detail = res.result
+					console.log(this.detail,'this.detail')
 				}).finally(()=>{
 					uni.hideLoading()
 				})
