@@ -70,6 +70,12 @@
 					}
 				},
 				{
+					"path": "news/web_view",
+					"style": {
+						"navigationBarTitleText": "新闻详情"
+					}
+				},
+				{
 					"path": "sch_logo/index",
 					"style": {
 						"navigationBarTitleText": "合作学校"

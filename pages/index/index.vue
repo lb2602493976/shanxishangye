@@ -529,7 +529,9 @@
 				console.log(item,'item')
 				console.log(item.newId,'item.newId')
 				if(item.targetType=="1"){
-					
+					uni.navigateTo({
+						url: `/pages_common/news/web_view?ids=${item.picHref}`
+					})
 				}else if(item.targetType=="2"){
 					// 跳转小程序
 					if(item.appid){
